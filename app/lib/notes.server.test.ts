@@ -73,6 +73,17 @@ describe("saving a Note", () => {
     expect(getNote(db, base.user.id, lessonIds[1])).toBeUndefined();
   });
 
+  it("deletes the Note when saved with an empty body", () => {
+    saveNote(db, base.user.id, lessonIds[0], "Soon gone", NOW);
+
+    expect(saveNote(db, base.user.id, lessonIds[0], "   ", minutesLater(5))).toEqual({
+      ok: true,
+      note: null,
+    });
+    expect(getNote(db, base.user.id, lessonIds[0])).toBeUndefined();
+    expect(listNotesForStudent(db, base.user.id)).toEqual([]);
+  });
+
   it("never leaves a Student with two Notes on one Lesson", () => {
     saveNote(db, base.user.id, lessonIds[0], "Mine", NOW);
 
